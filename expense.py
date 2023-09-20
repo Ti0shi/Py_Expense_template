@@ -49,10 +49,9 @@ def new_expense(*args):
     amount = -(float)(infos['amount']) / len(involved['involved'])
 
     with open('expense_report.csv', 'a', newline='') as file:
-        fieldsname = ["amount", "label", "spender"]
         writer = csv.writer(file)
         for i in involved['involved']:
-            writer.writerow([amount if i != infos['spender'] else infos['amount'], infos['label'], i])
+            writer.writerow([amount if i != infos['spender'] else infos['amount'], infos['label'], i, infos['spender']])
 
     print("Expense Added !")
 
