@@ -37,13 +37,25 @@ expense_questions = [
 
 def new_expense(*args):
     infos = prompt(expense_questions)
-    names = get_names()
-    # Writing the informations on external file might be a good idea ¯\_(ツ)_/¯
+    involved_questions = {
+            "type":"checkbox",
+            "name":"involved",
+            "message":"Select involved names",
+            "choices":[{'name': i, 'checked': True if i == infos['spender'] else False, 'disabled': True if i == infos['spender'] else False} for i in get_names()],
+        }
+
+    involved = prompt(involved_questions)
+    involved['involved'] += [infos['spender']]
+    amount = -(float)(infos['amount']) / len(involved['involved'])
+
     with open('expense_report.csv', 'a', newline='') as file:
         fieldsname = ["amount", "label", "spender"]
-        writer = csv.DictWriter(file, fieldsname)
-        writer.writerow(infos)
+        writer = csv.writer(file)
+        for i in involved['involved']:
+            writer.writerow([amount if i != infos['spender'] else infos['amount'], infos['label'], i])
+
     print("Expense Added !")
+
     return True
 
 
